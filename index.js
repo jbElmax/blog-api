@@ -4,6 +4,7 @@ const app = express();
 require('dotenv').config();
 const cors = require('cors');
 const CategoryRouter = require('./route/categoryRoute');
+const UserRouter = require('./route/userRoute')
 const port = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
 
@@ -15,6 +16,7 @@ app.get('/',(req,res)=>{
   res.send('Welcome to Blog API');
 })
 app.use('/api',CategoryRouter);
+app.use('/auth',UserRouter);
 
 const runServer = async()=>{
   try{
