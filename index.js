@@ -7,9 +7,11 @@ const CategoryRouter = require('./route/categoryRoute');
 const UserRouter = require('./route/userRoute')
 const port = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
+const cookieParser = require('cookie-parser')
 
 // Middleware to parse JSON in request body
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors())
 // Sample data (in-memory database for simplicity)
 app.get('/',(req,res)=>{

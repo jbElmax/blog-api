@@ -1,16 +1,11 @@
 const User = require('../model/userModel');
 const {random,authentication} = require('../helper/index');
 
-const getUsers = async(req,res)=>{
-    try{
-        const users = await User.find();
-        return res.status(200).json(users);
-    }catch(error){
-        console.log(error);
-        return res.status(500).json('error occured while getting users');
-    }
-}
+const getUserBySessionToken = (sessionToken)=>User.findOne({'authentication.sessionToken':sessionToken});
+const deleteUserById = (id)=>User.findByIdAndDelete(id);
+const getUserById = (id)=>User.findById(id);
 
+const getUsers = ()=> User.find();
 const registerUser = async(req,res)=>{
     try{
         const {email,username,password} = req.body;
@@ -66,8 +61,51 @@ const loginUser = async(req,res)=>{
         return res.status(500).json('error occured while logging in')
     }
 }
+const getAllUsers = async(req,res)=>{
+    try{
+        const users = await getUsers();
+        return res.status(200).json(users);
+    }catch(error){
+        console.log(error);
+        return res.sendStatus(400);
+    }
+}
+const deleteUser = async(req,res)=>{
+    try{
+        const {id} = req.params;
+        const deletedUser = await deleteUserById(id);
+        return res.json(deletedUser);
+    }catch(error){
+        console.log(error);
+        return res.sendStatus(500);
+    }
+}
+const updateUser = async(req,res)=>{
+    try{
+        const {id} = req.params;
+        const {username} = req.body;
+
+        if(!username){
+            return res.sendStatus(400);
+        }
+
+        const user = await getUserById(id);
+        user.username = username;
+        await user.save();
+
+        return res.status(200).json(user);
+
+    }catch(error){
+        console.log(error);
+        return res.sendStatus(500);
+    }
+}
 
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    getUserBySessionToken,
+    getAllUsers,
+    deleteUser,
+    updateUser
 }
