@@ -61,6 +61,27 @@ const loginUser = async(req,res)=>{
         return res.status(500).json('error occured while logging in')
     }
 }
+const logoutUser = async(req,res)=>{
+    try{
+        const sessionToken = req.cookies['USER-AUTH'];
+
+        if(!sessionToken){
+            return res.sendStatus(403);
+        }
+        const user = await getUserBySessionToken(sessionToken);
+        if(!user){
+            return res.sendStatus(403);
+        }
+        user.authentication.sessionToken = null;
+        await user.save();
+        res.clearCookie('USER-AUTH', { domain: 'localhost', path: '/' });
+
+        return res.status(200).json({ message: 'Logout successful' });
+    }catch(error){
+        console.log(error);
+        return res.sendStatus(500);
+    }
+}
 const getAllUsers = async(req,res)=>{
     try{
         const users = await getUsers();
@@ -107,5 +128,6 @@ module.exports = {
     getUserBySessionToken,
     getAllUsers,
     deleteUser,
-    updateUser
+    updateUser,
+    logoutUser
 }
