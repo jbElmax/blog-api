@@ -8,13 +8,18 @@ const UserRouter = require('./route/userRoute')
 const BlogRouter = require('./route/blogPostRoute');
 const port = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
+const FRONTEND = process.env.FRONTEND;
 const cookieParser = require('cookie-parser');
 const TagRoute = require('./route/tagRoute');
 
 // Middleware to parse JSON in request body
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors())
+var corsOptions = {
+  origin: FRONTEND,
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+app.use(cors(corsOptions))
 // Sample data (in-memory database for simplicity)
 app.get('/',(req,res)=>{
   res.send('Welcome to Blog API');
