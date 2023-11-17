@@ -45,6 +45,7 @@ const getPostWithComments = async(req,res)=>{
         const post = await BlogPost.findById(postId)
             .populate('author','username')
             .populate('category')
+            .populate('tags')
             .populate({
             path:'comments',
             populate:{

@@ -25,7 +25,8 @@ const registerUser = async(req,res)=>{
             authentication:{
                 salt,
                 password:authentication(salt,password)
-            }
+            },
+            isAdmin:false
         })
         return res.status(200).json(user);
     }catch(error){
