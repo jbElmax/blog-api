@@ -66,7 +66,7 @@ const getPostWithComments = async(req,res)=>{
 }
 const getFeaturedPost = async(req,res)=>{
     try{
-        const {postId} = req.params;
+
         const post = await BlogPost.find({isFeatured:true})
             .populate('author','username')
             .populate('category')
@@ -88,10 +88,28 @@ const getFeaturedPost = async(req,res)=>{
         return res.sendStatus(500);
     }
 }
+const getAllPostOfAuthor = async(req,res)=>{
+    const {authorId} = req.params;
+    const post = await BlogPost.find({author:authorId})
+    .populate('author','username')
+    .populate('category')
+    .populate({
+    path:'comments',
+    populate:{
+        path:'user',
+        model:'User'
+    }
+});
+if(!post){
+    return res.sendStatus(404);
+}
+return res.status(200).json(post);
+}
 module.exports = {
     createBlogPost,
     addCommentOnPost,
     getAllPost,
     getPostWithComments,
-    getFeaturedPost
+    getFeaturedPost,
+    getAllPostOfAuthor
 }
