@@ -7,19 +7,11 @@ const blogPostSchema = mongoose.Schema(
             type:String,
             required:true
         },
-        introduction:{
-            type:String,
-            required:false
-        },
         content:{
             type:String,
             required:true
         },
         image:{
-            type:String,
-            required:false
-        },
-        conclusion:{
             type:String,
             required:false
         },
@@ -38,7 +30,7 @@ const blogPostSchema = mongoose.Schema(
         }],
         isFeatured:{
             type:Boolean,
-            default:false
+            required:true   
         },
         tags:[{
             type:mongoose.Schema.Types.ObjectId,
