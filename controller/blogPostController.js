@@ -69,8 +69,23 @@ const addCommentOnPost = async(req,res)=>{
 }
 const getAllPost = async(req,res)=>{
     try{
-        const blogPosts =await BlogPost.find();
-        return res.status(200).json(blogPosts);
+
+        const post = await BlogPost.find()
+            .populate('author','username')
+            .populate('category')
+            .populate({
+            path:'comments',
+            populate:{
+                path:'user',
+                model:'User'
+            }
+        });
+        if(!post){
+            return res.sendStatus(404);
+        }
+        return res.status(200).json(post);
+
+
     }catch(error){
         console.log(error);
         return res.sendStatus(500);
@@ -125,6 +140,7 @@ const getFeaturedPost = async(req,res)=>{
         return res.sendStatus(500);
     }
 }
+
 const getAllPostOfAuthor = async(req,res)=>{
     const {authorId} = req.params;
     const post = await BlogPost.find({author:authorId})
