@@ -214,6 +214,36 @@ const updatePost = async(req,res)=>{
     }
 }
 
+const getPostByTagName = async(req,res)=>{
+    try{
+        const{tagName} = req.params;
+        
+        //const tag = await Tag.findOne({name:tagName});
+        const tag = await Tag.findOne({ name: new RegExp(tagName, 'i') });
+
+        if(!tag){
+            return res.status(404).json('there no tag');
+        }
+        const blogPosts = await BlogPost.find({tags:{$in:[tag._id]}})    
+            .populate('author','username')
+            .populate('category')
+            .populate({
+            path:'comments',
+            populate:{
+                path:'user',
+                model:'User'
+            }
+            });
+        if(!blogPosts){
+            return res.status(404).json('there no blog post with this tag');
+        }
+        return res.status(200).json(blogPosts);
+    }catch(error){
+        console.log(error);
+        return res.status(500).json('error occured while get posts')
+    }
+}
+
 
 module.exports = {
     createBlogPost,
@@ -224,6 +254,7 @@ module.exports = {
     getAllPostOfAuthor,
     deletePostOfAuthor,
     getPostByCategory,
-    updatePost
+    updatePost,
+    getPostByTagName
 
 }
