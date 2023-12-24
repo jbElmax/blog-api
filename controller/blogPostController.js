@@ -60,7 +60,7 @@ const addCommentOnPost = async(req,res)=>{
 
         await post.save();
 
-        return res.status(201).json(post);
+        return res.status(200).json(post);
 
     }catch(error){
         console.log(error);

@@ -35,33 +35,33 @@ const registerUser = async(req,res)=>{
         
     }
 }
-const loginUser = async(req,res)=>{
-    try{
-        const {email,password} = req.body;
-        if(!email || !password){
-            return res.status(400).json('bad request, please provide email and password')
-        }
-        const user = await User.findOne({email}).select('+authentication.salt +authentication.password');
-        if(!user){
-            return res.status(404).json('user not found');
-        }
-        const expectedHash = authentication(user.authentication.salt,password);
-        if(user.authentication.password !=expectedHash){
-            return res.status(403).json('invalid credential');
-        }
+// const loginUser = async(req,res)=>{
+//     try{
+//         const {email,password} = req.body;
+//         if(!email || !password){
+//             return res.status(400).json('bad request, please provide email and password')
+//         }
+//         const user = await User.findOne({email}).select('+authentication.salt +authentication.password');
+//         if(!user){
+//             return res.status(404).json('user not found');
+//         }
+//         const expectedHash = authentication(user.authentication.salt,password);
+//         if(user.authentication.password !=expectedHash){
+//             return res.status(403).json('invalid credential');
+//         }
 
-        const salt = random();
-        const sessionToken = authentication(salt,user._id.toString());
-        user.authentication.sessionToken = sessionToken
-        await user.save();
+//         const salt = random();
+//         const sessionToken = authentication(salt,user._id.toString());
+//         user.authentication.sessionToken = sessionToken
+//         await user.save();
 
-        res.cookie('USER-AUTH',user.authentication.sessionToken,{domain:'localhost',path:'/'})
-        return res.status(200).json(user);
-    }catch(error){
-        console.log(error);
-        return res.status(500).json('error occured while logging in')
-    }
-}
+//         res.cookie('USER-AUTH',user.authentication.sessionToken,{domain:'localhost',path:'/'})
+//         return res.status(200).json(user);
+//     }catch(error){
+//         console.log(error);
+//         return res.status(500).json('error occured while logging in')
+//     }
+// }
 const logoutUser = async(req,res)=>{
     try{
         const sessionToken = req.cookies['USER-AUTH'];
@@ -125,7 +125,6 @@ const updateUser = async(req,res)=>{
 
 module.exports = {
     registerUser,
-    loginUser,
     getUserBySessionToken,
     getAllUsers,
     deleteUser,

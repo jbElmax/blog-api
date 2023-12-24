@@ -4,7 +4,8 @@ const app = express();
 require('dotenv').config();
 const cors = require('cors');
 const CategoryRouter = require('./route/categoryRoute');
-const UserRouter = require('./route/userRoute')
+//const UserRouter = require('./route/userRoute')
+const AuthRoute = require('./route/authRoute');
 const BlogRouter = require('./route/blogPostRoute');
 const port = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
@@ -27,7 +28,7 @@ app.get('/',(req,res)=>{
 app.use('/api',CategoryRouter);
 app.use('/api',BlogRouter);
 app.use('/api',TagRoute);
-app.use('/auth',UserRouter);
+app.use('/auth',AuthRoute);
 
 
 const runServer = async()=>{
