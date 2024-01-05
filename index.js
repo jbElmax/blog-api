@@ -17,7 +17,7 @@ const TagRoute = require('./route/tagRoute');
 app.use(express.json());
 app.use(cookieParser());
 var corsOptions = {
-  origin: FRONTEND,
+  origin: [FRONTEND,'http://localhost:3000'],
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 app.use(cors(corsOptions))
